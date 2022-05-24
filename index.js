@@ -9,7 +9,7 @@ const rowSize = Math.floor((window.innerWidth - 62) / 266);
 var focusedTile = { index: null, tile: null};
 
 
-// jQuery helper function to determine if and HTML element is fully
+// jQuery helper function to determine if an HTML element is fully
 // within the viewport.
 $.fn.isInViewport = function () {
     let elementTop = $(this).offset().top;
@@ -25,10 +25,9 @@ $.fn.isInViewport = function () {
 const fetchContainers = async () => {
     const resp = await fetch("https://cd-static.bamgrid.com/dp-117731241344/home.json");
     const body = await resp.json();
-    const { data } = body
-    const containers = data.StandardCollection.containers;
+    const containers = body.data.StandardCollection.containers;
 
-    containers.forEach(async (container, index) => {
+    containers.forEach(async (container) => {
         const newCollection = new Collection(container, rowSize);
         collections.push(newCollection);
 
@@ -88,14 +87,13 @@ const focusTile = (collectionIndex, tileIndex) => {
 const renderCollections = () => {
     collections.forEach((collection) => {
        collection.renderVisibleTiles();
-    })
-
-    focusTile(0, 0);
+    });
 }
 
 $(document).ready(async () => {
     await fetchContainers();
     renderCollections();
+    focusTile(0, 0);
     $("html, body").animate({ scrollTop: 0 }, 200);
 
     window.addEventListener("keydown", (e) => {
